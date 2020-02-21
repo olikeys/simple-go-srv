@@ -10,6 +10,10 @@ import (
 
 func main() {
 	started := time.Now()
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(200)
+		fmt.Fprintf("Hello World")
+	})
 	http.HandleFunc("/started", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(200)
 		data := (time.Since(started)).String()
@@ -18,6 +22,10 @@ func main() {
 	http.HandleFunc("/healthz", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(200)
 		w.Write([]byte("ok"))
+	})
+	http.HandleFunc("/ping", func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(200)
+		w.Write([]byte("pong"))
 	})
 	http.HandleFunc("/fail", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(500)
