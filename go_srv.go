@@ -5,14 +5,22 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+	"os"
 	"time"
 )
 
 func main() {
 	started := time.Now()
+
+	env, provided := os.LookupEnv("ENV")
+	if !provided {
+		log.Fatalf("ENV environment variable is not set")
+	}
+	log.Println("Started at ", started)
+	log.Println("Environment: ", env)
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(200)
-		fmt.Fprintf("Hello World")
+		fmt.Printf("Hello World")
 	})
 	http.HandleFunc("/started", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(200)
@@ -29,7 +37,7 @@ func main() {
 	})
 	http.HandleFunc("/fail", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(500)
-                w.Write([]byte("error"))
+		w.Write([]byte("error"))
 	})
 	http.HandleFunc("/redirect", func(w http.ResponseWriter, r *http.Request) {
 		loc, err := url.QueryUnescape(r.URL.Query().Get("loc"))
